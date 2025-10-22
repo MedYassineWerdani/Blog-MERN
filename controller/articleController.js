@@ -1,6 +1,8 @@
 const apiTest=(req,res)=> {
-res.status(200).json({message : "Test Works"});
+return res.status(200).json({message : "Test Works"});
 };
+
+const Article = require("../model/article");
 
 
 const apiArticleCreate= (req,res) => {
@@ -12,9 +14,9 @@ const apiArticleCreate= (req,res) => {
         //     res.status(400).json( {message : "Article has no data"})
         // }
         
-        if(!req.body | Object.keys.length==0 ) {
-          return res.status(400).json({message : "THat wont work"})
-        }
+    if(!req.body | Object.keys.length==0 ) {
+        return res.status(400).json({message : "THat wont work"})
+    }
     const {title,content,author}= req.body;
 
 

@@ -2,8 +2,14 @@ const express = require('express');
 const app = express();
 const PORT = 3000;
 
+require("dotenv").config();
+
+const connectDB = require("./config/db");
+
+connectDB();
+
 const routerArticle =require("./Routes/articleRoutes");
-const routerUser = require("./Routes/userRoutes");
+const routerUser = require("./Routes/UserRoutes");
 app.use(express.json())
 
 // defining route GET
@@ -19,6 +25,12 @@ app.get('/',(req,res)=>{
 app.use('/api/article', routerArticle);
 
 app.use('/api/user' , routerUser);
+
+app.use((req,res)=> {
+  res.redirect('/');
+})
+
+
 
 
 app.listen(PORT, () => {
