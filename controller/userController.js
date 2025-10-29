@@ -1,62 +1,65 @@
-const Article = require("../model/article");
+const User = require("../model/user");
 
+const addUser = async (req,res) => {
+    if (!req.body)
+        return res.status(400).json({message : "THat wont work"});
 
-const apiTest=(req,res)=> {
-return res.status(200).json({message : "User Controller Works"});
-};
-
-
-const apiUserCreate= async (req,res) => {
-
-    if(!req.body) {
-        return res.status(400).json({message : "THat wont work"})
+    const {username,email,password,role}= req.body;
+    if (!username || !email || !password) {
+         return res.status(400).json({message : "THat wont work all fileds must be filled"});
     }
-    // const {username,password,email}= req.body;
+    const useradd= new User ({
+        username: username ,
+        email: email , 
+        password : password ,
+        role : role ,
 
+    });
+    //sauveguarde 
+    try {
+        const addResult = await useradd.save();
+        return res.status(200).json({message : "UserCreated " , newuser : addResult});
 
-    // if(!(username|password|email)){
-    //     res.status(400).json ({ message : " Please check all fields are filled"})
-    // }
-    // else{
-    //     res.status(201).json ({message :"User Created :" , article :{username:username , password:password , email:email}})
-    // }
- 
-        try {
-             const newArticle = new Article({
-            title: req.body.title,
-            content: req.body.content,  
-            author: req.body.author
-        });
-        const savedArticle = await newArticle.save();
-        res.status(201).json({ message: "Article Created", article: savedArticle });
-        }
-        catch (error) {
-
-            res.status(400).json({ message: " Error Creating ", error: error.message });
-} }
-
-
-const listUsers=(req,res) => {
-    const articles=[
-        {"username" : "username1" ,"password" : "password1" , "email":"email1"},
-        {"username" : "username2" ,"password" : "password2" , "email":"email2"},
-        {"username" : "username3" ,"password" : "password3" , "email":"email3"},
-    ];
-
-    res.status(200).json  (articles);
-};
-
-const updateUser=(req,res) => {
-    res.status(200).json  ({message : "Update User Works"});
-
+    }
+    catch(err){
+        if (err.code == 11000) { return res.status(409).json({message :"Duplicate Username or Email Detected"});
+    }
+    else 
+        {return res.status(400).json({message : "THat didn't work Internal server error" +err.message});}
+    }
 }
 
-const deleteUser=(req,res) => {
-    res.status(203).json  ({message : "Delete User Works"});    }
+const getUsers = async(req,res) => {
+    const users = await User.find();
+    if(!users){return res.status(200).json({message : "No users found"});}
+    else {return res.status(200).json({message : "users found  ",number_of_users:users.length , users :users});}
 
+};
 
+const getUserInfo = async(req,res) => {
+    const id =req.params.id;
+    if(!id) 
+    return res.status(400).json({message : "give user id" });
+    try {
+        const userInfo = User.findById(id);
+        return res.status(200).json({message : "User Found" , user : userInfo})
+}catch (err) {
+            return res.status(400).json({message : "ERROR  " +err.message});
+}
+ }
 
-module.exports= {apiUserCreate, apiTest , listUsers,updateUser,deleteUser};
+const getUserInfoByMail = async(req,res) => {
+    //implement now
+    const email = req.body.email;
+    if(!email) 
+    return res.status(400).json({message : "give user email" });
 
+    try {
+        const userInfo = User.findOne({email: email});
+        return res.status(200).json({message : "User Found" , user : userInfo})
+}catch (err) {
+            return res.status(400).json({message : "ERROR  " +err.message});
+    
+};}
 
-// mohamed.benjazia@polytechnicien.tn
+module.exports = {addUser, getUsers,getUserInfo ,getUserInfoByMail};

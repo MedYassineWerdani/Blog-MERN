@@ -2,24 +2,38 @@ const mongoose = require("mongoose")
 
 const userSchema = new mongoose.Schema({
 
-    title : {
+    username : {
         type:String,
-        required:[ true , ' the title is required'] , trim : true 
+        required:[ true , ' the username is required'] , trim : true ,
+        lowercase: true,
+        unique: true
 
     }
-    , content : {
-        type: String ,
-        required: [ true , 'Content is required'] 
+    ,email : {
+        type:String,
+        required:[ true , ' the email is required'] , trim : true ,
+        lowercase: true,
+        unique: true
+
     }
-    , author : {
+    , password : {
         type:String , 
-        default : 'Anonymous'
+        required : true,
+        minlength : [8, " Password cannot be shorter than 8 characters"] ,
+        select:false,
+
 
     }
-    , createdAt : {
-        type : Date ,
-        default : Date.now  
+    , role : {
+        type : String ,
+        required :true  ,
+        lowercase: true ,
+        default : "user" ,
     }
-});
+},{
+timestamps:true,
+collection:"users"
+}
+);
 
-module.exports = mongoose.model('Article' , userSchema);
+module.exports = mongoose.model('User' , userSchema);

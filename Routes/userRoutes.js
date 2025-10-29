@@ -1,17 +1,20 @@
 const express=require("express");
 const routerUser=express.Router();
 
-const {apiUserCreate, apiTest , listUsers,updateUser,deleteUser}= require("../controller/userController.js");
+const {addUser, getUsers,getUserInfo}= require("../controller/userController.js");
 
 
-routerUser.get("/test" , apiTest);
+// routerUser.get("/test" , apiTest);
 
-routerUser.get("/" , listUsers);
+routerUser.get("/all" , getUsers);
 
-routerUser.post("/create" , apiUserCreate );
 
-routerUser.delete("/del" , deleteUser );
+routerUser.get("/:id" , getUserInfo);
 
-routerUser.put("/update" , updateUser);
+routerUser.post("/create" , addUser );
+
+// routerUser.delete("/del" , deleteUser );
+
+// routerUser.put("/update" , updateUser);
 
 module.exports=routerUser;
