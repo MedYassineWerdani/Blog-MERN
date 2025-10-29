@@ -1,3 +1,4 @@
+const user = require("../model/user");
 const User = require("../model/user");
 
 const addUser = async (req,res) => {
@@ -41,25 +42,80 @@ const getUserInfo = async(req,res) => {
     if(!id) 
     return res.status(400).json({message : "give user id" });
     try {
-        const userInfo = User.findById(id);
+        const userInfo = await User.findById(id);
         return res.status(200).json({message : "User Found" , user : userInfo})
 }catch (err) {
-            return res.status(400).json({message : "ERROR  " +err.message});
+            return res.status(400).json({message : "ERROR 06  " +err.message});
 }
  }
 
 const getUserInfoByMail = async(req,res) => {
-    //implement now
+    if(!req.body) {
+        return res.status(400).json({message : "No data provided" });
+    }
     const email = req.body.email;
     if(!email) 
     return res.status(400).json({message : "give user email" });
 
     try {
-        const userInfo = User.findOne({email: email});
+        const userInfo = await User.findOne({email: email});
+        if(!userInfo) {
+            return res.status(200).json({message : "No user with that email"});}
+
         return res.status(200).json({message : "User Found" , user : userInfo})
 }catch (err) {
-            return res.status(400).json({message : "ERROR  " +err.message});
+            return res.status(400).json({message : "ERROR 07  " +err.message});
     
-};}
+};
+}
 
-module.exports = {addUser, getUsers,getUserInfo ,getUserInfoByMail};
+const updateUser = async(req,res) => {
+    const id = req.params.id;
+    if(!id) {
+        return res.status(404).json({message : "Please verify userID"});
+    }
+    if(!req.body) {
+        return res.status(404).json({message : "No data provided for update!"})};
+    const {username,email,role} = req.body;
+    const userData = {
+        username : username ,
+        email : email ,
+        role : role ,
+    };
+try {
+    const userupdated = await user.findByIdAndUpdate(id,userData,{new:true});
+    
+    if (!userupdated) {
+        return res.status(404).json({message : "User not found or not updated"});
+    }
+
+    return res.status(203).json({message : "User updated successfully" , user : userupdated});
+}
+catch(err) {
+    return res.status(500).json({message : "Error updating user " + err.message});
+}
+}
+
+const deleteUser = async(req,res) => {
+
+    const id = req.params.id;
+    // if(!id) {
+    //     return res.status(404).json({message : "Please verify userID"});
+    // }
+    
+try {
+    const userDeleted = await user.findByIdAndDelete(id);
+    
+    if (!userDeleted) {
+        return res.status(404).json({message : "User not found or not deleted"});
+    }
+
+    return res.status(200).json({message : "User deleted successfully" , user : userDeleted});
+}
+catch(err) {
+    return res.status(500).json({message : "Error deleting user " + err.message});
+}
+
+ }
+
+module.exports = {addUser, getUsers,getUserInfo ,getUserInfoByMail,updateUser,deleteUser};
