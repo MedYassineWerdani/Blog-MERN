@@ -10,6 +10,7 @@ connectDB();
 
 const routerArticle =require("./Routes/articleRoutes");
 const routerUser = require("./Routes/UserRoutes");
+const { urlNotFound, errorHandler } = require("./middleware/errorMiddleware");
 app.use(express.json())
 
 // defining route GET
@@ -26,9 +27,13 @@ app.use('/api/article', routerArticle);
 
 app.use('/api/user' , routerUser);
 
-app.use((req,res)=> {
-  res.redirect('/');
-})
+// app.use((req,res)=> {
+//   res.redirect('/');
+// })
+
+app.use(urlNotFound);
+
+app.use(errorHandler);  
 
 
 
