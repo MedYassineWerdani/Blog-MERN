@@ -1,13 +1,20 @@
 const user = require("../model/user");
 const User = require("../model/user");
+const asyncHandler = require("express-async-handler")
 
-const addUser = async (req,res) => {
-    if (!req.body)
-        return res.status(400).json({message : "THat wont work"});
+const addUser = asyncHandler(async(req,res) => {
+    if (!req.body){
+        // return res.status(400).json({message : "THat wont work"});
+        res.status(400);
+        throw new Error("That did NNOOOOOOOT Work");}
+
 
     const {username,email,password,role}= req.body;
-    if (!username || !email || !password) {
-         return res.status(400).json({message : "THat wont work all fileds must be filled"});
+    if (!(username |email |password)) {
+    // if (!username || !email || !password) {
+        //  return res.status(400).json({message : "THat wont work all fileds must be filled"});
+        res.status(400);
+        throw new Error("ALL FIELDS MUST BE FILLED MY DUDE");
     }
     const useradd= new User ({
         username: username ,
@@ -17,18 +24,18 @@ const addUser = async (req,res) => {
 
     });
     //sauveguarde 
-    try {
+    // try {
         const addResult = await useradd.save();
         return res.status(200).json({message : "UserCreated " , newuser : addResult});
 
-    }
-    catch(err){
+    // }
+    // catch(err){
         if (err.code == 11000) { return res.status(409).json({message :"Duplicate Username or Email Detected"});
     }
     else 
         {return res.status(400).json({message : "THat didn't work Internal server error" +err.message});}
-    }
-}
+    // }
+});
 
 const getUsers = async(req,res) => {
     const users = await User.find();

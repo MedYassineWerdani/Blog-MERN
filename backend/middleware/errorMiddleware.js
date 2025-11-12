@@ -5,7 +5,12 @@ const urlNotFound = (req, res, next) => {
 }
 
 const errorHandler = (err, req, res, next) => {
-    const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+    var statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+    if (err.code == 11000) {
+        statusCode = 409
+        err.message="We have a duplication error";
+
+    }
     res.status(statusCode);
     res.json({
         message: "Error detected through middleware: " + err.message,
