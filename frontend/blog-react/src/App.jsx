@@ -1,5 +1,6 @@
 import Article from "./components/article";
-
+import Header  from "./components/header";
+import Footer from "./components/footer";
 function App(){
   const articles = [
     {id: 1 , title : "Title 1" , author: 'Author 1' , content : " Contents of Article 1"},
@@ -26,7 +27,7 @@ function App(){
     <strong>{articles.length} </strong> articles disponibles
   </div>
 
-    {articles.map((article) => ( <Article key={article.id} title = {articles.title} author= {article.author} content={article.content}/>)) }
+    {articles.map((article) => ( <Article key={article.id} title = {article.title} author= {article.author} content={article.content}/>)) }
     <hr />
   </div>
 
