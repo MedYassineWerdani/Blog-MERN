@@ -7,17 +7,36 @@ function App(){
     {id: 3 , title : "Title 3" , author: 'Author 3' , content : " Contents of Article 3"},
     {id: 4 , title : "Title 4" , author: 'Author 4' , content : " Contents of Article 4"},
     {id: 5 , title : "Title 5" , author: 'Author 5' , content : " Contents of Article 5"}
-  ]
+  ]; 
+  const currentYear = new Date().getFullYear();
   return (<div style={{
+    minHeight : '100vh' ,
+    display : 'flex' ,
+    flexDirection : "column" ,}}>
+      <div style ={{
     maxWidth : '800px' ,
     margin : '0 auto' , 
-    padding: '20px'
+    padding: '20px' ,
+    flex :1
   }}> 
-    <h1>MY REACT APP</h1>
-    <Article title="introduction to react" author='YASSINE' content='Object oreineted programming is complete bs and needs to be abolished like slavery thanks for coming to my ted talk' />
+  <Header title = "Mon Blog React" 
+  subtitle = "Apprendre React avec des exemples pratiques" />
+
+  <div style= {{ marginBottom : '20px' , padding : '15px' , backgroundColor : '#f0f9ff', borderRadius : '8px' }}>
+    <strong>{articles.length} </strong> articles disponibles
+  </div>
+
     {articles.map((article) => ( <Article key={article.id} title = {articles.title} author= {article.author} content={article.content}/>)) }
     <hr />
-  </div>)
+  </div>
+
+  <Footer 
+  author = "EPS"
+  year = {currentYear}
+  />
+  
+  </div>
+  ) ;
 
 
 }
