@@ -1,4 +1,4 @@
-function Article ({title,author,content , likes , onLike}) {
+function Article ({title,author,content , likes , onLike , onDelete}) {
 
 return (
     <article style={{
@@ -28,6 +28,18 @@ return (
                     borderRadius: '4px',
                     cursor : 'pointer'
                 }}>Like</button>
+                <button onClick={onDelete} 
+                style = {{ 
+                    padding : '8px 16px' ,
+                    backgroundColor : '#ef4444',
+                    color : 'white', 
+                    border : 'none' ,
+                    borderRadius : '4px' , 
+                    cursor : 'pointer' ,
+                    marginLeft : 'auto' , 
+                }}>
+                    Supprimer
+                </button>
                 <span style={{ fontSize :'16px' , fontWeight:'bold'}}>{likes} likes</span>
             </div>
         <b></b>

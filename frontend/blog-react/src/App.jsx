@@ -1,21 +1,52 @@
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
 import Article from "./components/article";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import ProductCard from "./components/productCard";
 import ArticleForm from './components/articleForm';
+import { fetchArticles  } from './services/articlesServices';
 
 function App() {
-  const [articles, setArticles] = useState([
-    { id: 1, title: "Title 1", author: "Author 1", content: "Contents of Article 1", likes: 5 },
-    { id: 2, title: "Title 2", author: "Author 2", content: "Contents of Article 2", likes: 3 },
-    { id: 3, title: "Title 3", author: "Author 3", content: "Contents of Article 3", likes: 11 },
-    { id: 4, title: "Title 4", author: "Author 4", content: "Contents of Article 4", likes: 4 },
-    { id: 5, title: "Title 5", author: "Author 5", content: "Contents of Article 5", likes: 2 }
-  ]);
-
-  const [filterAuthor, setFilterAuthor] = useState('');
+  const [filterAuthor, setFilterAuthor] = useState();
   const currentYear = new Date().getFullYear();
+  const [articles , setArticles] = useState([]);
+  const [loading , setLoading] = useState (true);
+  const [error ,setError] = useState(null);
+
+  useEffect (()=>{
+    const getArticles = async () => {
+      try {
+        const data = await fetchArticles();
+        setArticles (data);
+      } catch (err) {
+        setError ("Failed to fetch articles. Please try again later." + err.message);
+      } finally {
+        setLoading (false);
+      }
+
+    };
+    getArticles();
+  },[]);
+
+  if (loading) {
+    return <div style={{ textAlign: 'center', marginTop: '50px' }}>Loading articles...</div>;
+  }
+
+  if (error) {
+    return <div style={{ textAlign: 'center', marginTop: '50px', color: 'red' }}>{error}</div>;
+  }     
+  // const [articles, setArticles] = useState([
+  //   { id: 1, title: "Title 1", author: "Author 1", content: "Contents of Article 1", likes: 5 },
+  //   { id: 2, title: "Title 2", author: "Author 2", content: "Contents of Article 2", likes: 3 },
+  //   { id: 3, title: "Title 3", author: "Author 3", content: "Contents of Article 3", likes: 11 },
+  //   { id: 4, title: "Title 4", author: "Author 4", content: "Contents of Article 4", likes: 4 },
+  //   { id: 5, title: "Title 5", author: "Author 5", content: "Contents of Article 5", likes: 2 }
+  // ]);
+
+
+
+
+
 
   const products = [
     { id: 1, productName: "productName 1", price: "price 1", category: "category of Article 1" },
@@ -38,6 +69,13 @@ function App() {
       )
     );
   };
+
+  // Delete articles 
+  const handleDelete = (id) => {
+    if (window.confirm('are you sure you want to delete this article ') ) {
+      setArticles(articles.filter(article => article.id !== id) );
+    };
+  }
 
   // Filter logic
   const filteredArticles = filterAuthor
@@ -89,7 +127,8 @@ function App() {
           <Article
             key={article.id}
             {...article}
-            onLike={() => handleLike(article.id)}
+            onLike={() => handleLike(article.id) }
+            onDelete={() => handleDelete(article.id)}
           />
         ))}
 

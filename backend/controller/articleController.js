@@ -33,14 +33,11 @@ const apiArticleCreate= (req,res) => {
     // });
 };
 
-const listArticles=(req,res) => {
-    const articles=[
-        {"title" : "TITLE1" ,"content" : "CONTENT1" , "author":"AUTHOR1"},
-        {"title" : "TITLE2" ,"content" : "CONTENT2" , "author":"AUTHOR2"},
-        {"title" : "TITLE3" ,"content" : "CONTENT3" , "author":"AUTHOR3"},
-    ];
+const listArticles = async(req,res) => {
+    const articles = await Article.find();
+    if(!articles){return res.status(200).json({message : "No articles found"});}
+    else {return res.status(200).json({message : "articles found  ",number_of_articles:articles.length , articles :articles});}
 
-    res.status(200).json  (articles);
 };
 
 module.exports= {apiArticleCreate, apiTest , listArticles};

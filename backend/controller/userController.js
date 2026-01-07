@@ -1,4 +1,3 @@
-const user = require("../model/user");
 const User = require("../model/user");
 const asyncHandler = require("express-async-handler")
 
@@ -10,7 +9,7 @@ const addUser = asyncHandler(async(req,res) => {
 
 
     const {username,email,password,role}= req.body;
-    if (!(username |email |password)) {
+    if (!(username && email && password)) {
     // if (!username || !email || !password) {
         //  return res.status(400).json({message : "THat wont work all fileds must be filled"});
         res.status(400);
@@ -20,8 +19,7 @@ const addUser = asyncHandler(async(req,res) => {
         username: username ,
         email: email , 
         password : password ,
-        role : role ,
-
+        role : role ,   
     });
     //sauveguarde 
     // try {
